@@ -16,7 +16,7 @@ export default function TaskList() {
   return (
     <div className="flex flex-col">
       <Suspense fallback={<p>Loading</p>}>
-        <div className="min-h-[80vh] flex flex-col w-full basis-full lg:pt-10 md:px-4 gap-4 grow">
+        <div className="task-list">
           {!loading && data ? (
             data?.map((todo) => <Card task={todo} key={todo.id} />)
           ) : (

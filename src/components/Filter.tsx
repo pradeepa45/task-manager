@@ -58,28 +58,19 @@ function Filter({ column }: { column: string }) {
       ...currentFilter,
       value,
     });
-    if (active) {
-      updateUrlParams(["filterBy", "value", "page"], "remove");
-    } else {
-      updateUrlParams({ filterBy: column, value: value }, "add");
-    }
+    if (value === "-") {
+      updateUrlParams(["filterBy", "value"], "remove");
+    } else updateUrlParams({ filterBy: column, value: value }, "add");
   };
 
   if (loading) {
     return <div>Loading...</div>;
   }
   return (
-    <div className="flex items-start gap-2 justify-center flex-col border border-foreground rounded p-4">
-      <span className="capitalize whitespace-nowrap">
-        {column === "due" ? "due date" : "status"}
-      </span>
+    <div className="filter-wrapper">
+      <strong>{column === "due" ? "due date" : "status"}</strong>
       <select
-        className={clsx(
-          "py-2 rounded flex bg-background text-foreground whitespace-nowrap gap-2 items-center justify-center w-full border",
-          active
-            ? "bg-secondary border-secondary"
-            : "bg-transparent border-background"
-        )}
+        className={active ? "bg-rose-300 border-rose-300" : "border-white"}
         defaultValue={active ? currentFilter.value : "-"}
         onChange={handleClick}
       >

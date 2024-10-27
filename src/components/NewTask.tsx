@@ -4,24 +4,18 @@ import Label from "./Form/Label";
 
 export default function NewTaskForm() {
   return (
-    <form
-      className="flex flex-col gap-2 py-4 lg:mb-10"
-      action={handleCreateTask}
-    >
+    <form className="new-task-form" action={handleCreateTask}>
       <FormField>
         <Label name="title" label="Title" />
-        <input name="title" className=" border border-foreground" required />
+        <input name="title" required />
       </FormField>
       <FormField>
         <Label name="description" label="Description" />
-        <textarea
-          name="description"
-          className=" border border-foreground resize-none"
-        />
+        <textarea name="description" className="resize-none" />
       </FormField>
       <FormField>
         <Label name="status" label="status" />
-        <select name="status" className="grow !p-2  border border-foreground">
+        <select name="status" className="grow !p-2">
           <option value="pending">Pending</option>
           <option value="in_progress">In Progress</option>
           <option value="completed">Completed</option>
@@ -32,7 +26,6 @@ export default function NewTaskForm() {
         <input
           type="date"
           name="due"
-          className=" border border-foreground"
           required
           min={new Date().toISOString().split("T")[0]}
         />

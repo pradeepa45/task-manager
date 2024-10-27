@@ -1,18 +1,19 @@
 "use client";
 
 import { ChangeEventHandler, MouseEventHandler, useState } from "react";
+import {
+  Edit01Icon,
+  Delete01Icon,
+  TickDouble01Icon,
+  Calendar04Icon,
+  Clock04Icon,
+} from "hugeicons-react";
 
 import { createClient } from "@/utils/supabase/client";
 import EditableInput from "./Editable/Input";
 import Tag from "./Tag";
-
-interface Task {
-  id: number;
-  title: string;
-  description: string;
-  status: "in_progress" | "completed" | "pending";
-  due: string;
-}
+import { createdAt, getPrettyDate } from "@/utils/functions/formatter";
+import { Task } from "@/types/common";
 
 export default function Card({ task }: { task: Task }) {
   const supabase = createClient();
@@ -24,7 +25,6 @@ export default function Card({ task }: { task: Task }) {
     HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
   > = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setCurrent({
       ...currentTask,
       [name]: value,
@@ -35,7 +35,16 @@ export default function Card({ task }: { task: Task }) {
     e
   ) => {
     e.preventDefault();
-    await supabase.from("todos").delete().eq("id", task.id);
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this item? This action cannot be undone."
+    );
+    if (isConfirmed) {
+      try {
+        await supabase.from("todos").delete().eq("id", task.id);
+      } catch (error) {
+        console.error("Error deleting item:", error);
+      }
+    }
   };
 
   const handleEditRequest: MouseEventHandler<HTMLButtonElement> = async (
@@ -67,83 +76,93 @@ export default function Card({ task }: { task: Task }) {
   };
 
   return (
-    <div className="flex p-4 text-foreground rounded lg:justify-between lg:flex-row flex-col border border-foreground">
-      <form
-        className="flex justify-between grow lg:flex-row flex-col lg:gap-4"
-        method="POST"
-      >
-        <div className="flex flex-col grow gap-1 max-w-screen-md">
-          <EditableInput
-            name="id"
-            value={currentTask.id}
-            readOnly
-            className="hidden"
-          />
-          <EditableInput
-            name="title"
-            value={currentTask.title}
-            onChange={handleInputChange}
-            readOnly={!editMode}
-            className="text-foreground font-lg font-bold"
-          />
-
+    <div className="card">
+      <form method="POST">
+        <div>
+          <div className="card-header">
+            <EditableInput
+              name="title"
+              value={currentTask.title}
+              onChange={handleInputChange}
+              readOnly={!editMode}
+              className="font-lg font-bold"
+            />
+            <div className="buttons-list">
+              <button
+                className="edit-button"
+                onClick={(event) => handleEditRequest(event)}
+              >
+                {editMode ? (
+                  <TickDouble01Icon size={24} />
+                ) : (
+                  <Edit01Icon size={24} />
+                )}
+              </button>
+              <button
+                type="submit"
+                className="delete-button"
+                onClick={handleDeleteRequest}
+              >
+                <Delete01Icon size={24} />
+              </button>
+            </div>
+          </div>
+          <div className="tags">
+            <Tag
+              type="status"
+              status={currentTask.status}
+              due={currentTask.due}
+            />
+            <Tag type="due" status={currentTask.status} due={currentTask.due} />
+          </div>
+        </div>
+        <div className="card-body">
+          <input name="id" value={currentTask.id} readOnly className="hidden" />
           <textarea
             name="description"
             value={currentTask.description}
             readOnly={!editMode}
-            className="text-foreground grow lg:h-14 lg:overflow-scroll lg:line-clamp-2 lg:text-ellipsis resize-none h-32"
             onChange={handleInputChange}
           />
-          <div className="flex gap-2 mt-1">
+          <div className="flex gap-2 justify-between">
             {editMode ? (
-              <EditableInput
-                type="date"
-                name="due"
-                value={currentTask.due}
-                onChange={handleInputChange}
-                readOnly={!editMode}
-              />
+              <div className="flex items-center gap-2 justify-center">
+                <EditableInput
+                  type="date"
+                  name="due"
+                  value={currentTask.due}
+                  onChange={handleInputChange}
+                  readOnly={!editMode}
+                />
+                <select
+                  name="status"
+                  value={currentTask.status}
+                  onChange={handleInputChange}
+                >
+                  <option value="pending">Pending</option>
+                  <option value="in_progress">In Progress</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
             ) : (
-              <Tag
-                type="status"
-                status={currentTask.status}
-                due={currentTask.due}
-              />
+              <div className="flex items-center gap-1.5 justify-center">
+                <Calendar04Icon size={20} />
+                <span className="leading-2 inline-flex items-center">
+                  Due{" "}
+                  <span className="due-date">
+                    {getPrettyDate(currentTask.due)}
+                  </span>
+                </span>
+              </div>
             )}
-            {editMode ? (
-              <select
-                name="status"
-                className=""
-                value={currentTask.status}
-                onChange={handleInputChange}
-              >
-                <option value="pending">Pending</option>
-                <option value="in_progress">In Progress</option>
-                <option value="completed">Completed</option>
-              </select>
-            ) : (
-              <Tag
-                type="due"
-                status={currentTask.status}
-                due={currentTask.due}
-              />
+            {!editMode && (
+              <div className="flex items-center justify-center gap-1 text-sm text-slate-500">
+                <Clock04Icon size={16} />
+                <em>created</em>
+                <em>{createdAt(currentTask.created_at)}</em>
+              </div>
             )}
           </div>
-        </div>
-        <div className="flex lg:flex-col gap-2 lg:justify-end flex-row lg:my-0 mt-4">
-          <button
-            className="border-violet-500 text-violet-500 px-6 py-2 rounded border bg-transparent hover:bg-violet-500 hover:text-white"
-            onClick={(event) => handleEditRequest(event)}
-          >
-            {editMode ? "Save" : "Edit"}
-          </button>
-          <button
-            type="submit"
-            className="border border-rose-400 bg-transparent text-rose-400 px-6 py-2 rounded hover:bg-rose-400 hover:text-white"
-            onClick={handleDeleteRequest}
-          >
-            Delete
-          </button>
         </div>
       </form>
     </div>

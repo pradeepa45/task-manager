@@ -21,18 +21,8 @@ function Sort({ param }: { param: string }) {
   }
 
   return (
-    <button
-      className={clsx(
-        "py-2 px-0 rounded flex whitespace-nowrap gap-2 items-center ",
-        "bg-background text-foreground"
-      )}
-      onClick={handleClick}
-    >
-      <input
-        type="checkbox"
-        defaultChecked={active}
-        className="accent-accent"
-      />
+    <button className="sort-button" onClick={handleClick}>
+      <input type="checkbox" defaultChecked={active} />
       <span className="capitalize">
         {param === "due" ? "due date" : "status"}
       </span>

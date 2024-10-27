@@ -18,22 +18,26 @@ export default function Filters() {
   }
 
   return (
-    <div className="flex gap-4 mb-4 flex-col">
-      <details className="flex gap-2 flex-col">
-        <summary className="border-b border-foreground">Sort</summary>
-        <div className="py-4 flex flex-col gap-4">
+    <div className="filter-bar">
+      <details open={sort ? true : false}>
+        <summary>Sort</summary>
+        <div className="filters">
           <Sort param="due" />
           <Sort param="status" />
         </div>
       </details>
-      <details className="flex gap-3 flex-col">
-        <summary className="border-b border-foreground">Filter</summary>
-        <div className="py-4 flex flex-col gap-4">
+      <details open={filterBy && value ? true : false}>
+        <summary>Filter</summary>
+        <div className="filters">
           <Filter column="due" />
           <Filter column="status" />
         </div>
       </details>
-      <button onClick={handleReset} disabled={!isResetButtonEnabled()}>
+      <button
+        onClick={handleReset}
+        disabled={!isResetButtonEnabled()}
+        className="reset-button"
+      >
         Reset filters
       </button>
     </div>

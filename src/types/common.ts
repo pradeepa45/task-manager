@@ -11,6 +11,7 @@ export interface Task {
   description: string;
   status: TaskStatus;
   due: string;
+  created_at:string;
 }
 
 export interface FilterOption {

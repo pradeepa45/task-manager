@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "babel.config.s", "__tests__/addNewTask.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "babel.config.s", "__tests__/addNewTask.jsx", "next.config.mjs", "cypress/support/commands.ts", "cypress/support/commands.ts"],
   "exclude": ["node_modules"]
 }

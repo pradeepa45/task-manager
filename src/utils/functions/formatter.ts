@@ -1,3 +1,5 @@
+import moment from "moment"
+
 export function getPrettyDate (due:string) {
   if(due === '-') return "Select"
   const date = new Date(due);
@@ -11,39 +13,11 @@ export function getVerbalStatus (status: string) {
   else return 'All'
 };
 
-export function getTagBg(id:number ) {
-  // gove colors based on condition
-  let color = "bg-amber-500"
-  if (id%4 === 0) color = "bg-yellow-500";
-  if (id%4 === 1) color="bg-green-500";
-  if (id%4 === 2) color="bg-red-500";
-  if (id%4 === 3) color="bg-gray-500";
-  else color='bg-gray-500'
-  console.log('%csrc/utils/functions/formatter.ts:22 color', 'color: #26bfa5;', color);
-  return color;
-};
-
-const colors = [
-  "accent",
-];
-
-
-export const backgroundColor = () => {
-  const bg = colors[Math.floor(Math.random() * colors.length)];
-  return `bg-${bg}`;
-};
-
-export const textColor = () => {
-  const text = colors[Math.floor(Math.random() * colors.length)];
-  return `text-${text}`;
+export function timeAgo(date:string) {
+  return moment(date.split("-").join(""), "YYYYMMDD").fromNow()
 }
 
-export const borderColor = () => {
-  const border = colors[Math.floor(Math.random() * colors.length)];
-  return `border-${border}`;
-}
-
-export const getColor = () => {
-  const randomIndex = Math.floor(Math.random() * colors.length);
-  return colors[randomIndex];
+export function createdAt(date:string) {
+  const dateString = date.split("T")[0]
+  return timeAgo(dateString)
 }

@@ -8,7 +8,9 @@
   --primary: #FF9000;
   --secondary: #F8E199;
   --accent: #0679CE;
-  --disabled: #606060;
+
+  --tw-shadowcolor: theme(colors.gray.400);
+  --tw-border-color: theme(colors.gray.300);
 }
 
 body {
@@ -18,23 +20,111 @@ body {
 }
 
 input, textarea {
-  @apply text-foreground px-4 py-2 rounded;
-  &::placeholder {
-    @apply text-disabled;
-  }
-  &:read-only {
-    @apply bg-transparent px-0;
-  }
+  @apply text-foreground px-4 py-2 rounded focus-visible:outline-none;
+}
+
+textarea {
+  @apply resize-none;
+}
+
+input[type='checkbox'] {
+  @apply accent-rose-500 outline-rose-500 h-4 w-4 rounded;
 }
 
 select {
-  @apply text-foreground px-4 py-2 rounded;
+  @apply text-foreground px-4 py-2 rounded focus-visible:outline-none;
 }
 
 label {
-  @apply capitalize
+  @apply capitalize font-semibold;
 }
 
 button {
-  @apply w-full bg-primary text-black px-4 py-2 rounded disabled:bg-disabled disabled:cursor-not-allowed disabled:text-gray-300;
+  @apply px-4 py-2 rounded border bg-rose-100 border-rose-100 text-rose-500 hover:bg-rose-500 hover:border-rose-500 hover:text-white disabled:bg-gray-300 disabled:border-gray-300 disabled:text-gray-500 transition-all font-semibold;
+}
+
+form.new-task-form{
+  @apply flex flex-col gap-2 py-4 lg:mb-10;
+  input, textarea, select {
+    @apply border border-foreground;
+  }
+}
+
+.task-list {
+  @apply min-h-[80vh] flex flex-col w-full basis-full lg:pt-10 md:px-4 gap-4 grow;
+}
+
+.pagination-bar {
+  @apply flex gap-6 mt-6 items-center justify-center;
+  button {
+    @apply w-fit bg-white text-black border border-black hover:bg-black hover:text-white disabled:bg-gray-300 disabled:border-gray-300 disabled:text-gray-500;
+  }
+}
+
+.card {
+  @apply flex p-4 text-foreground rounded lg:justify-between lg:flex-row flex-col border hover:shadow-lg transition-shadow;
+  form {
+    @apply flex justify-between grow flex-col lg:gap-4;
+    input, textarea {
+      @apply read-only:px-1 py-0.5 read-only:bg-transparent bg-sky-100/80;
+    }
+    select {
+      @apply bg-sky-100/80 px-1;
+    }
+    textarea {
+      @apply grow lg:h-14 lg:overflow-scroll lg:line-clamp-2 lg:text-ellipsis h-32;
+    }
+  }
+  .card-body {
+    @apply flex flex-col grow gap-1 max-w-screen-md;
+  }
+  .card-header {
+    @apply flex items-center justify-between;
+  }
+  .buttons-list {
+    @apply flex lg:flex-row gap-2 lg:justify-end flex-row lg:my-0 mt-4;
+  }
+  .edit-button, .delete-button {
+    @apply px-4 py-2 rounded border bg-transparent hover:text-white w-fit;
+  }
+  .edit-button {
+    @apply border-violet-200 text-violet-500 hover:bg-violet-500 bg-violet-200 hover:border-violet-500;
+  }
+  .delete-button {
+    @apply border border-rose-200 bg-transparent text-rose-400 hover:bg-rose-400 bg-rose-200 hover:border-rose-400;
+  }
+  .tags {
+    @apply flex gap-2 mt-1;
+    .tag {
+      @apply py-0.5 px-1.5 w-fit lg:-mt-1 text-sm rounded-full border;
+    }
+  }
+  
+}
+
+.sort-button {
+  @apply py-2 px-0 rounded flex whitespace-nowrap gap-2 items-center bg-transparent border-none hover:bg-transparent hover:text-rose-500;
+}
+
+.filter-wrapper {
+  @apply flex items-center gap-2 justify-between rounded px-2;
+  strong {
+    @apply capitalize whitespace-nowrap;
+  }
+  select {
+    @apply py-2 px-2 rounded flex text-foreground whitespace-nowrap gap-2 items-center justify-center border;
+  }
+}
+
+.filter-bar {
+  @apply flex gap-4 mb-4 flex-col;
+  details {
+    @apply flex gap-2 flex-col;
+  }
+  summary {
+    @apply border-b border-foreground;
+  }
+  div.filters {
+    @apply py-4 flex flex-col gap-4;
+  }
 }

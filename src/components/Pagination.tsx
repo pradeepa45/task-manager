@@ -1,3 +1,4 @@
+import { ArrowLeft02Icon, ArrowRight02Icon } from "hugeicons-react";
 import React from "react";
 
 interface PaginationProps {
@@ -14,21 +15,13 @@ export default function Pagination({
   onPrevious,
 }: PaginationProps) {
   return (
-    <div className="flex gap-6 mt-6 items-center justify-center">
-      <button
-        onClick={onPrevious}
-        disabled={currentPage === 1}
-        className="w-fit"
-      >
-        Previous
+    <div className="pagination-bar">
+      <button onClick={onPrevious} disabled={currentPage === 1}>
+        <ArrowLeft02Icon size={24} />
       </button>
-      <span>page {currentPage}</span>
-      <button
-        onClick={onNext}
-        disabled={currentPage === totalPages}
-        className="w-fit"
-      >
-        Next
+      <span className="page-number">{currentPage}</span>
+      <button onClick={onNext} disabled={currentPage === totalPages}>
+        <ArrowRight02Icon size={24} />
       </button>
     </div>
   );
