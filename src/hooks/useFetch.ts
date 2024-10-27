@@ -4,7 +4,7 @@ import { ParamInput, Task } from "@/types/common";
 import fetchSortFilterData from "@/utils/functions/fetch";
 import taskUpdateSubscriber from "@/utils/supabase/subscriptions";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function useFetch() {
   const urlSearchParams = useSearchParams();
@@ -24,9 +24,23 @@ export default function useFetch() {
     results: 1,
   });
 
+  const resetPageNumber = useCallback(() => {
+    setMeta({
+      ...meta,
+      currentPage: 1,
+    });
+  }, [meta]);
+
+  useEffect(() => {
+    if (meta.currentPage > meta.totalPages) {
+      resetPageNumber();
+    }
+  }, [meta, resetPageNumber]);
+
   const updateUrlParams = (
     params: ParamInput,
-    action: "add" | "remove" = "add"
+    action: "add" | "remove" = "add",
+    resetPageNumber = false
   ) => {
     const newSearchParams = new URLSearchParams(urlSearchParams);
     if (Array.isArray(params)) {
@@ -52,13 +66,39 @@ export default function useFetch() {
         }
       });
     }
+    if (resetPageNumber) {
+      newSearchParams.set("page", "1");
+    }
     const newUrl = `${pathname}?${newSearchParams.toString()}`;
     window.location.href = newUrl;
   };
 
+  const handleCustomFetch = useCallback(() => {
+    const customFetch = async () => {
+      await fetchSortFilterData(
+        meta,
+        setLoading,
+        setData,
+        setMeta,
+        setError,
+        filterBy ?? undefined,
+        value ?? undefined,
+        sort ?? undefined,
+        1
+      );
+    };
+    customFetch();
+  }, [meta, setLoading, setData, setMeta, setError, filterBy, sort, value]);
+
   useEffect(() => {
-    taskUpdateSubscriber(data, setData, setLoading, "updated-todos");
-  }, [data]);
+    taskUpdateSubscriber(
+      data,
+      setData,
+      setLoading,
+      "updated-todos",
+      handleCustomFetch
+    );
+  }, [data, handleCustomFetch]);
 
   useEffect(() => {
     const customFetch = async () => {
@@ -81,15 +121,16 @@ export default function useFetch() {
       ...meta,
       currentPage: meta.currentPage + 1,
     });
-    updateUrlParams({ "page": meta.currentPage + 1 }, "add");
+    updateUrlParams({ page: meta.currentPage + 1 }, "add");
   };
   const handlePreviousPage = () => {
     setMeta({
       ...meta,
       currentPage: meta.currentPage - 1,
     });
-    updateUrlParams({ "page": meta.currentPage - 1 }, "add");
+    updateUrlParams({ page: meta.currentPage - 1 }, "add");
   };
+
   return {
     data,
     loading,
@@ -98,5 +139,7 @@ export default function useFetch() {
     updateUrlParams,
     handleNextPage,
     handlePreviousPage,
+    handleCustomFetch,
+    resetPageNumber,
   };
 }

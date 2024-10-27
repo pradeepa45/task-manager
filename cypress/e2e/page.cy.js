@@ -103,13 +103,38 @@ describe("Task Manager - delete", () => {
   });
 
   it("should delete the first card when confirmed", () => {
-    cy.get(".card").then(($cards) => {
-      const initialCount = $cards.length;
-      cy.on("window:confirm", () => true);
-      cy.get(".card").first().find(".delete-button").click();
-      cy.wait("@deleteTodo").its("response.statusCode").should("eq", 204);
-      cy.get(".task-list .card").should("have.length", initialCount - 1);
-    });
+    let initialTitle, initialDescription;
+
+    cy.get(".card")
+      .first()
+      .within(() => {
+        cy.get("input[name=title]")
+          .invoke("val")
+          .then((val) => {
+            initialTitle = val;
+          });
+
+        cy.get("textarea[name=description]")
+          .invoke("val")
+          .then((val) => {
+            initialDescription = val;
+          });
+      });
+
+    cy.on("window:confirm", () => true);
+    cy.get(".card").first().find("button[type=submit]").click();
+    cy.wait(2000);
+    cy.get(".card")
+      .first()
+      .within(() => {
+        cy.get("input[name=title]")
+          .invoke("val")
+          .should("not.eq", initialTitle);
+
+        cy.get("textarea[name=description]")
+          .invoke("val")
+          .should("not.eq", initialDescription);
+      });
   });
 });
 

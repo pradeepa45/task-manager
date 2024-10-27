@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "test": "cypress run –spec cypress/e2e/page.cy.js"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.1",

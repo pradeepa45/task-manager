@@ -1,6 +1,5 @@
 "use client";
 
-import clsx from "clsx";
 import { useSearchParams } from "next/navigation";
 import { BaseSyntheticEvent, memo, useEffect, useState } from "react";
 
@@ -60,7 +59,9 @@ function Filter({ column }: { column: string }) {
     });
     if (value === "-") {
       updateUrlParams(["filterBy", "value"], "remove");
-    } else updateUrlParams({ filterBy: column, value: value }, "add");
+    } else {
+      updateUrlParams({ filterBy: column, value: value }, "add", true);
+    }
   };
 
   if (loading) {
@@ -70,7 +71,11 @@ function Filter({ column }: { column: string }) {
     <div className="filter-wrapper">
       <strong>{column === "due" ? "due date" : "status"}</strong>
       <select
-        className={active ? "bg-rose-300 border-rose-300" : "border-white"}
+        className={
+          active
+            ? "bg-rose-400 border-rose-400"
+            : "border-background bg-transparent"
+        }
         defaultValue={active ? currentFilter.value : "-"}
         onChange={handleClick}
       >

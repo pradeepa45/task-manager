@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { ArrowLeft02Icon, ArrowRight02Icon } from "hugeicons-react";
 import React from "react";
 
@@ -14,8 +15,9 @@ export default function Pagination({
   onNext,
   onPrevious,
 }: PaginationProps) {
+  const shouldShowPagination = totalPages > 1;
   return (
-    <div className="pagination-bar">
+    <div className={clsx("pagination-bar", !shouldShowPagination && "!hidden")}>
       <button onClick={onPrevious} disabled={currentPage === 1}>
         <ArrowLeft02Icon size={24} />
       </button>

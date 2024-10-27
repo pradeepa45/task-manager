@@ -135,8 +135,16 @@ export class TaskManager {
   }
 
   verifySort() {
-    cy.get("details .filters .sort-button span").first().contains("due date");
-    cy.get("details .filters .sort-button span").last().contains("status");
+    cy.get("details .filters .sort-button")
+      .first()
+      .get("span")
+      .eq(1)
+      .contains("due date");
+    cy.get("details .filters .sort-button")
+      .last()
+      .get("span")
+      .eq(3)
+      .contains("status");
 
     // Open sort details and trigger sort
     cy.get("details summary").eq(1).click();

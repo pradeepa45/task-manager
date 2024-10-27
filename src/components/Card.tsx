@@ -14,8 +14,9 @@ import EditableInput from "./Editable/Input";
 import Tag from "./Tag";
 import { createdAt, getPrettyDate } from "@/utils/functions/formatter";
 import { Task } from "@/types/common";
+import clsx from "clsx";
 
-export default function Card({ task }: { task: Task }) {
+export default function Card({ task, order }: { task: Task; order: number }) {
   const supabase = createClient();
 
   const [editMode, setMode] = useState(false);
@@ -31,10 +32,9 @@ export default function Card({ task }: { task: Task }) {
     });
   };
 
-  const handleDeleteRequest: MouseEventHandler<HTMLButtonElement> = async (
-    e
-  ) => {
-    e.preventDefault();
+  const handleDeleteRequest: MouseEventHandler<
+    HTMLButtonElement
+  > = async () => {
     const isConfirmed = window.confirm(
       "Are you sure you want to delete this item? This action cannot be undone."
     );
@@ -50,8 +50,8 @@ export default function Card({ task }: { task: Task }) {
   const handleEditRequest: MouseEventHandler<HTMLButtonElement> = async (
     event
   ) => {
+    event.preventDefault();
     if (!editMode) {
-      event.preventDefault();
       setMode(true);
       return;
     }
@@ -76,7 +76,7 @@ export default function Card({ task }: { task: Task }) {
   };
 
   return (
-    <div className="card">
+    <div className={clsx("card", `delay-[${(order + 1) * 1000}ms]`)}>
       <form method="POST">
         <div>
           <div className="card-header">
@@ -147,8 +147,8 @@ export default function Card({ task }: { task: Task }) {
             ) : (
               <div className="flex items-center gap-1.5 justify-center">
                 <Calendar04Icon size={20} />
-                <span className="leading-2 inline-flex items-center">
-                  Due{" "}
+                <span className="leading-2 inline-flex items-center gap-1">
+                  <>Due on</>
                   <span className="due-date">
                     {getPrettyDate(currentTask.due)}
                   </span>

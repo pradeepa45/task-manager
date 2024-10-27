@@ -1,10 +1,20 @@
+"use client";
+
 import { handleCreateTask } from "@/app/create";
 import FormField from "./Form/Field";
 import Label from "./Form/Label";
+import { useRef } from "react";
 
 export default function NewTaskForm() {
+  const formRef = useRef<HTMLFormElement>(null);
+
+  async function handleSubmit(formData: FormData) {
+    await handleCreateTask(formData);
+    formRef.current?.reset();
+  }
+
   return (
-    <form className="new-task-form" action={handleCreateTask}>
+    <form ref={formRef} className="new-task-form" action={handleSubmit}>
       <FormField>
         <Label name="title" label="Title" />
         <input name="title" required />

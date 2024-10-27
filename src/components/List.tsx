@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import useFetch from "@/hooks/useFetch";
 import Card from "./Card";
 import Pagination from "./Pagination";
+import Loading from "./Loading";
 
 export default function TaskList() {
   const { data, loading, error, meta, handleNextPage, handlePreviousPage } =
@@ -14,13 +15,15 @@ export default function TaskList() {
     return <div>Error: {JSON.stringify(error)}</div>;
   }
   return (
-    <div className="flex flex-col">
-      <Suspense fallback={<p>Loading</p>}>
+    <div className="flex flex-col lg:px-0 px-6">
+      <Suspense fallback={<Loading />}>
         <div className="task-list">
           {!loading && data ? (
-            data?.map((todo) => <Card task={todo} key={todo.id} />)
+            data?.map((todo, index) => (
+              <Card task={todo} key={todo.id} order={index} />
+            ))
           ) : (
-            <>Loading</>
+            <Loading />
           )}
         </div>
         <Pagination

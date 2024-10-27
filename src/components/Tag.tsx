@@ -16,15 +16,15 @@ export default function Tag({
     let color;
     if (status === "in_progress") {
       if (isOverdue)
-        color = "bg-fuchsia-100 border-fuchsia-500 text-fuchsia-600";
-      else color = "border-lime-500 text-lime-600 bg-lime-100";
+        color = "text-fuchsia-100 border-fuchsia-500 bg-fuchsia-600";
+      else color = "border-lime-500 bg-lime-600 text-lime-100";
     } else if (status === "completed") {
       if (isOverdue)
-        color = "bg-emerald-100 border-emerald-500 text-emerald-600";
-      else color = "bg-sky-200 border-sky-500 text-sky-500";
+        color = "text-emerald-100 border-emerald-500 bg-emerald-600";
+      else color = "text-sky-200 border-sky-500 bg-sky-500";
     } else {
-      if (isOverdue) color = "bg-red-100 border-red-400 text-red-400";
-      else color = "bg-orange-100 border-orange-300 text-orange-300";
+      if (isOverdue) color = "text-red-100 border-red-400 bg-red-400";
+      else color = "text-orange-100 border-orange-300 bg-orange-300";
     }
     return (
       <div
@@ -41,14 +41,14 @@ export default function Tag({
   } else {
     let style;
     if (status === "in_progress") {
-      if (isOverdue) style = "border-amber-500 text-amber-500 bg-amber-100";
-      else style = "border-cyan-500 text-cyan-500 bg-cyan-100";
+      if (isOverdue) style = "border-amber-500 bg-amber-600 text-amber-50";
+      else style = "border-cyan-500 bg-cyan-500 text-cyan-100";
     } else if (status === "completed") {
-      if (isOverdue) style = "border-teal-600 text-teal-600 bg-teal-200";
-      else style = "border-emerald-600 text-emerald-600 bg-emerald-200";
+      if (isOverdue) style = "border-teal-600 bg-teal-600 text-teal-200";
+      else style = "border-emerald-600 bg-emerald-600 text-emerald-200";
     } else {
-      if (isOverdue) style = "border-orange-600 text-orange-600 bg-orange-200";
-      else style = "border-amber-500 text-amber-500 bg-amber-200";
+      if (isOverdue) style = "border-orange-600 bg-orange-600 text-orange-200";
+      else style = "border-amber-500 bg-amber-500 text-amber-200";
     }
     return (
       <div

@@ -1,3 +1,4 @@
+import { Task } from "@/types/common"
 import { createClient } from "@/utils/supabase/client";
 
 const itemsPerPage = 5;
@@ -11,10 +12,14 @@ const fetchSortFilterData = async (
   filterBy?: string,
   value?: string,
   sort?: string,
+  customSize?: number
 ) => {
   const supabase = createClient();
   const start = (meta.currentPage - 1) * itemsPerPage;
-  const end = start + itemsPerPage - 1;
+  let end = start + itemsPerPage - 1;
+  if(customSize) {
+    end = start + customSize - 1;
+  }
   try {
     setLoading(true);
     let response;
@@ -53,6 +58,11 @@ const fetchSortFilterData = async (
         .order("id", { ascending: false });
     }
     if (response?.data && response.count) {
+      if(customSize) {
+        setData((prevData:Task[]) => {
+          return [...prevData,response.data]
+        })
+      }
       setData(response.data);
       setMeta({
         ...meta,
